@@ -134,7 +134,7 @@ function ProductModal({
                         ] !== "" && (
                           <button
                             className="btn btn-outline-primary btn-sm w-100"
-                            onClick={onAddImage}
+                            onClick={() => onAddImage}
                           >
                             新增圖片
                           </button>
@@ -143,7 +143,7 @@ function ProductModal({
                       {templateData.imagesUrl.length >= 1 && (
                         <button
                           className="btn btn-outline-danger btn-sm w-100"
-                          onClick={onRemoveImage}
+                          onClick={() => onRemoveImage}
                         >
                           取消圖片
                         </button>

@@ -368,7 +368,7 @@ function App() {
         <button
           className="btn btn-outline-danger"
           type="button"
-          onClick={deleteCartAll}
+          onClick={() => deleteCartAll}
         >
           清空購物車
         </button>
