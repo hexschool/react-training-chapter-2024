@@ -1,11 +1,10 @@
-import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
-const Login = ({ onLoginSuccess }) => {
+const Login = () => {
   const navigate = useNavigate();
   const {
     register,
@@ -21,7 +20,6 @@ const Login = ({ onLoginSuccess }) => {
       document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
       axios.defaults.headers.common.Authorization = `${token}`;
 
-      onLoginSuccess();
       navigate("/admin/products");
     } catch (error) {
       alert("登入失敗: " + error.response.data.message);
@@ -84,10 +82,6 @@ const Login = ({ onLoginSuccess }) => {
       <p className="mt-5 mb-3 text-muted">&copy; 2024~∞ - 六角學院</p>
     </div>
   );
-};
-
-Login.propTypes = {
-  onLoginSuccess: PropTypes.func.isRequired,
 };
 
 export default Login;

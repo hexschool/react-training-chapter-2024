@@ -1,3 +1,5 @@
+import { createBrowserRouter } from "react-router-dom";
+
 import Home from "./views/front/Home";
 import Login from "./views/front/Login";
 import NotFound from "./views/front/NotFound";
@@ -5,35 +7,35 @@ import Product from "./views/front/Products";
 import Cart from "./views/front/Cart";
 import SingleProduct from "./views/front/SingleProduct";
 
-import FrontendLayout from "./layout/FrontendLayout"; // 前台 Layout
-import AdminLayout from "./layout/AdminLayout"; // 後台 Layout
+import FrontendLayout from "./layout/FrontendLayout";
+import AdminLayout from "./layout/AdminLayout";
 import AdminProducts from "./views/admin/AdminProducts";
 import AdminOrders from "./views/admin/AdminOrders";
 
-const routes = (handleLoginSuccess) => [
+export const router = createBrowserRouter([
   {
     path: "/",
     element: <FrontendLayout />,
     children: [
       {
-        path: "/",
+        index: true,
         element: <Home />,
       },
       {
-        path: "/product",
+        path: "product",
         element: <Product />,
       },
       {
-        path: "/product/:id",
+        path: "product/:id",
         element: <SingleProduct />,
       },
       {
-        path: "/cart",
+        path: "cart",
         element: <Cart />,
       },
       {
-        path: "/login",
-        element: <Login onLoginSuccess={handleLoginSuccess} />,
+        path: "login",
+        element: <Login />,
       },
     ],
   },
@@ -55,6 +57,4 @@ const routes = (handleLoginSuccess) => [
     path: "*",
     element: <NotFound />,
   },
-];
-
-export default routes;
+]);

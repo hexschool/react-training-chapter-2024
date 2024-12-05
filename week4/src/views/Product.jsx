@@ -153,8 +153,8 @@ function Product() {
         `${API_BASE}/api/${API_PATH}/admin/product/${id}`
       );
       console.log("刪除成功", response.data);
-      await productModalRef.current.hide();
-      await getProductData();
+      productModalRef.current.hide();
+      getProductData();
     } catch (err) {
       console.error("刪除失敗", err.response.data.message);
     }
@@ -176,7 +176,7 @@ function Product() {
   const checkAdmin = async () => {
     try {
       await axios.post(`${API_BASE}/api/user/check`);
-      await getProductData();
+      getProductData();
     } catch (err) {
       navigate("/");
       console.log(err.response.data.message);

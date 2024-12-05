@@ -78,7 +78,7 @@ function App() {
     try {
       const url = `${API_BASE}/api/${API_PATH}/cart`;
       await axios.post(url, { data });
-      await getCart();
+      getCart();
     } catch (error) {
       console.log(error.response.data);
     } finally {
@@ -92,7 +92,7 @@ function App() {
     try {
       const url = `${API_BASE}/api/${API_PATH}/cart/${id}`;
       await axios.delete(url);
-      await getCart();
+      getCart();
     } catch (error) {
       console.log(error.response.data);
     }
@@ -119,7 +119,7 @@ function App() {
         qty,
       };
       await axios.put(url, { data });
-      await getCart();
+      getCart();
     } catch (error) {
       console.log(error.response.data);
     }
@@ -133,8 +133,8 @@ function App() {
         code,
       };
       await axios.post(url, { data });
-      await setCouponCode("");
-      await getCart();
+      setCouponCode("");
+      getCart();
     } catch (error) {
       console.log(error.response.data);
     }

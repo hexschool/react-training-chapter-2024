@@ -30,7 +30,7 @@ function App() {
   const checkAdmin = async () => {
     try {
       await axios.post(`${API_BASE}/api/user/check`);
-      await getData();
+      getData();
       setisAuth(true);
     } catch (err) {
       console.log(err.response.data.message);
