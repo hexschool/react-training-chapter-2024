@@ -106,7 +106,13 @@ function App() {
   };
 
   const updateProductData = async (id) => {
-    const product = modalType === "edit" ? `product/${id}` : `product`;
+    let product;
+    if (modalType === "edit") {
+      product = `product/${id}`;
+    } else {
+      product = `product`;
+    }
+
     const url = `${API_BASE}/api/${API_PATH}/admin/${product}`;
 
     const productData = {
@@ -120,22 +126,23 @@ function App() {
     };
 
     try {
-      const response =
-        modalType === "edit"
-          ? await axios.put(url, productData)
-          : await axios.post(url, productData);
+      let response;
+      if (modalType === "edit") {
+        response = await axios.put(url, productData);
+        console.log("更新成功", response.data);
+      } else {
+        response = await axios.post(url, productData);
+        console.log("新增成功", response.data);
+      }
 
-      console.log(
-        modalType === "edit" ? "更新成功" : "新增成功",
-        response.data
-      );
       productModalRef.current.hide();
       getProductData();
     } catch (err) {
-      console.error(
-        modalType === "edit" ? "更新失敗" : "新增失敗",
-        err.response.data.message
-      );
+      if (modalType === "edit") {
+        console.error("更新失敗", err.response.data.message);
+      } else {
+        console.error("新增失敗", err.response.data.message);
+      }
     }
   };
 
