@@ -406,7 +406,7 @@ function App() {
                           ] !== "" && (
                             <button
                               className="btn btn-outline-primary btn-sm w-100"
-                              onClick={() => handleAddImage}
+                              onClick={handleAddImage}
                             >
                               新增圖片
                             </button>
@@ -415,7 +415,7 @@ function App() {
                         {templateData.imagesUrl.length >= 1 && (
                           <button
                             className="btn btn-outline-danger btn-sm w-100"
-                            onClick={() => handleRemoveImage}
+                            onClick={handleRemoveImage}
                           >
                             取消圖片
                           </button>

@@ -128,22 +128,25 @@ function Product() {
     };
 
     try {
-      const response =
-        modalType === "edit"
-          ? await axios.put(url, productData)
-          : await axios.post(url, productData);
+      let response;
 
-      console.log(
-        modalType === "edit" ? "更新成功" : "新增成功",
-        response.data
-      );
+      if (modalType === "edit") {
+        response = await axios.put(url, productData);
+        console.log("更新成功", response.data);
+      } else {
+        response = await axios.post(url, productData);
+        console.log("新增成功", response.data);
+      }
+
       closeModal();
       getProductData();
     } catch (err) {
-      console.error(
-        modalType === "edit" ? "更新失敗" : "新增失敗",
-        err.response.data.message
-      );
+      if (modalType === "edit") {
+        console.error("更新失敗", err.response.data.message);
+      } else {
+        console.error("新增失敗", err.response.data.message);
+      }
+
       dispatch(createMessage(err.response.data));
     }
   };
@@ -155,7 +158,7 @@ function Product() {
       );
       console.log("刪除成功", response.data);
       await productModalRef.current.hide();
-      await getProductData();
+      getProductData();
     } catch (err) {
       dispatch(createMessage(err.response.data));
     }
@@ -177,7 +180,7 @@ function Product() {
   const checkAdmin = async () => {
     try {
       await axios.post(`${API_BASE}/api/user/check`);
-      await getProductData();
+      getProductData();
     } catch (err) {
       navigate("/");
       console.log(err.response.data.message);

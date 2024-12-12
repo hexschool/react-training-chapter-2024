@@ -2,7 +2,6 @@ import { useSelector } from "react-redux";
 
 function MessageToast() {
   const messages = useSelector((state) => state.message); 
-  console.log(messages)
   return (
     <div
       className="toast-container position-fixed"

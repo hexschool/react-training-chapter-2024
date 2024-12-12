@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import "./assets/style.css";
 
-const API_BASE = "https://ec-course-api.hexschool.io/v2"
+const API_BASE = "https://ec-course-api.hexschool.io/v2";
 
 // 請自行替換 API_PATH
-const API_PATH = ""
+const API_PATH = "";
 
 function App() {
   const [formData, setFormData] = useState({
@@ -17,29 +17,27 @@ function App() {
   const [products, setProducts] = useState([]);
   const [tempProduct, setTempProduct] = useState(null);
 
-  useEffect(() => {
-    const token = document.cookie.replace(
-      /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
-      "$1"
-    );
-    axios.defaults.headers.common.Authorization = `${token}`;
-
-    checkAdmin();
-  }, []);
-
-  const checkAdmin = async () => {
+  async function checkLogin() {
     try {
-      await axios.post(`${API_BASE}/api/user/check`);
-      getData();
-      setisAuth(true);
-    } catch (err) {
-      console.log(err.response.data.message);
+      const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("hexToken="))
+        ?.split("=")[1];
+      console.log(token);
+      axios.defaults.headers.common.Authorization = token;
+
+      const res = await axios.post(`${API_BASE}/api/user/check`);
+      console.log(res);
+    } catch (error) {
+      console.error(error);
     }
-  };
+  }
 
   const getData = async () => {
     try {
-      const response = await axios.get(`${API_BASE}/api/${API_PATH}/admin/products`);
+      const response = await axios.get(
+        `${API_BASE}/api/${API_PATH}/admin/products`
+      );
       setProducts(response.data.products);
     } catch (err) {
       console.error(err.response.data.message);
@@ -56,19 +54,16 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
-      const response = await axios.post(
-        `${API_BASE}/admin/signin`,
-        formData
-      );
+      const response = await axios.post(`${API_BASE}/admin/signin`, formData);
       const { token, expired } = response.data;
       document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
-      
+
       axios.defaults.headers.common.Authorization = `${token}`;
 
       getData();
-  
+
       setisAuth(true);
     } catch (error) {
       alert("登入失敗: " + error.response.data.message);
@@ -81,6 +76,14 @@ function App() {
         <div className="container">
           <div className="row mt-5">
             <div className="col-md-6">
+              <button
+                className="btn btn-danger mb-5"
+                type="button"
+                id="check"
+                onClick={checkLogin}
+              >
+                確認是否登入
+              </button>
               <h2>產品列表</h2>
               <table className="table">
                 <thead>

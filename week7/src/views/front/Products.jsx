@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { createMessage } from "../../slice/messageReducer";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
@@ -13,7 +13,7 @@ const Product = () => {
 
   const [products, setProducts] = useState([]);
 
-  const getProduct = async () => {
+  const getProduct = useCallback(async () => {
     try {
       const res = await axios.get(`${API_BASE}/api/${API_PATH}/products`);
       setProducts(res.data.products);
@@ -21,7 +21,7 @@ const Product = () => {
       dispatch(createMessage(error.response.data));
       console.error("取得產品資料失敗", error);
     }
-  };
+  }, [dispatch]);
 
   const handleViewMore = async (id) => {
     try {

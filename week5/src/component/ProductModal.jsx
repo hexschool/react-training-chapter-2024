@@ -2,30 +2,6 @@ import { useRef, useEffect } from "react";
 import * as bootstrap from "bootstrap";
 import PropTypes from "prop-types";
 
-ProductModal.propTypes = {
-  modalType: PropTypes.string.isRequired,
-  templateData: PropTypes.shape({
-    id: PropTypes.string,
-    imageUrl: PropTypes.string,
-    title: PropTypes.string,
-    category: PropTypes.string,
-    unit: PropTypes.string,
-    originPrice: PropTypes.string,
-    price: PropTypes.number,
-    description: PropTypes.string,
-    content: PropTypes.string,
-    isEnabled: PropTypes.bool,
-    imagesUrl: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
-  onCloseModal: PropTypes.func.isRequired,
-  onInputChange: PropTypes.func.isRequired,
-  onImageChange: PropTypes.func.isRequired,
-  onAddImage: PropTypes.func.isRequired,
-  onRemoveImage: PropTypes.func.isRequired,
-  onUpdateProduct: PropTypes.func.isRequired,
-  onDeleteProduct: PropTypes.func.isRequired,
-};
-
 function ProductModal({
   modalType,
   templateData,
@@ -134,7 +110,7 @@ function ProductModal({
                         ] !== "" && (
                           <button
                             className="btn btn-outline-primary btn-sm w-100"
-                            onClick={() => onAddImage}
+                            onClick={onAddImage}
                           >
                             新增圖片
                           </button>
@@ -143,7 +119,7 @@ function ProductModal({
                       {templateData.imagesUrl.length >= 1 && (
                         <button
                           className="btn btn-outline-danger btn-sm w-100"
-                          onClick={() => onRemoveImage}
+                          onClick={onRemoveImage}
                         >
                           取消圖片
                         </button>
@@ -303,5 +279,29 @@ function ProductModal({
     </div>
   );
 }
+
+ProductModal.propTypes = {
+  modalType: PropTypes.string.isRequired,
+  templateData: PropTypes.shape({
+    id: PropTypes.string,
+    imageUrl: PropTypes.string,
+    title: PropTypes.string,
+    category: PropTypes.string,
+    unit: PropTypes.string,
+    originPrice: PropTypes.string,
+    price: PropTypes.number,
+    description: PropTypes.string,
+    content: PropTypes.string,
+    isEnabled: PropTypes.bool,
+    imagesUrl: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
+  onCloseModal: PropTypes.func.isRequired,
+  onInputChange: PropTypes.func.isRequired,
+  onImageChange: PropTypes.func.isRequired,
+  onAddImage: PropTypes.func.isRequired,
+  onRemoveImage: PropTypes.func.isRequired,
+  onUpdateProduct: PropTypes.func.isRequired,
+  onDeleteProduct: PropTypes.func.isRequired,
+};
 
 export default ProductModal;
