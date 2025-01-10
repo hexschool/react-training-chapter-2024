@@ -16,11 +16,11 @@ function App() {
     title: "",
     category: "",
     unit: "",
-    originPrice: "",
+    origin_price: "",
     price: "",
     description: "",
     content: "",
-    isEnabled: false,
+    is_enabled: false,
     imagesUrl: [],
   });
 
@@ -33,11 +33,11 @@ function App() {
       title: product.title || "",
       category: product.category || "",
       unit: product.unit || "",
-      originPrice: product.originPrice || "",
+      origin_price: product.origin_price || "",
       price: product.price || "",
       description: product.description || "",
       content: product.content || "",
-      isEnabled: product.isEnabled || false,
+      is_enabled: product.is_enabled || false,
       imagesUrl: product.imagesUrl || [],
     });
     productModalRef.current.show();
@@ -118,9 +118,9 @@ function App() {
     const productData = {
       data: {
         ...templateData,
-        origin_price: Number(templateData.originPrice),
+        origin_price: Number(templateData.origin_price),
         price: Number(templateData.price),
-        is_enabled: templateData.isEnabled ? 1 : 0,
+        is_enabled: templateData.is_enabled ? 1 : 0,
         imagesUrl: templateData.imagesUrl,
       },
     };
@@ -174,6 +174,12 @@ function App() {
     axios.defaults.headers.common.Authorization = token;
     productModalRef.current = new bootstrap.Modal("#productModal", {
       keyboard: false,
+    });
+
+    document.querySelector('#productModal').addEventListener('hide.bs.modal', () => {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     });
 
     checkAdmin();
@@ -468,16 +474,16 @@ function App() {
                     </div>
                     <div className="row">
                       <div className="mb-3 col-md-6">
-                        <label htmlFor="originPrice" className="form-label">
+                        <label htmlFor="origin_price" className="form-label">
                           原價
                         </label>
                         <input
-                          id="originPrice"
+                          id="origin_price"
                           type="number"
                           min="0"
                           className="form-control"
                           placeholder="請輸入原價"
-                          value={templateData.originPrice}
+                          value={templateData.origin_price}
                           onChange={handleModalInputChange}
                         />
                       </div>
@@ -524,13 +530,13 @@ function App() {
                     <div className="mb-3">
                       <div className="form-check">
                         <input
-                          id="isEnabled"
+                          id="is_enabled"
                           className="form-check-input"
                           type="checkbox"
-                          checked={templateData.isEnabled}
+                          checked={templateData.is_enabled}
                           onChange={handleModalInputChange}
                         />
-                        <label className="form-check-label" htmlFor="isEnabled">
+                        <label className="form-check-label" htmlFor="is_enabled">
                           是否啟用
                         </label>
                       </div>
