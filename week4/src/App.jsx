@@ -8,7 +8,7 @@ import Pagination from "./component/Pagination";
 import "./assets/style.css";
 
 const API_BASE = "https://ec-course-api.hexschool.io/v2";
-const API_PATH = "angel1369";
+const API_PATH = "";
 
 function App() {
   const [formData, setFormData] = useState({
