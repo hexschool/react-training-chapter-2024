@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
-import { Modal } from "bootstrap";
+import * as bootstrap from "bootstrap";
 import ProductModal from "./component/ProductModal";
 import Pagination from "./component/Pagination";
 
@@ -57,24 +57,24 @@ function App() {
   const handleFileChange = async (e) => {
     const url = `${API_BASE}/api/${API_PATH}/admin/upload`;
 
-		const file = e.target.files?.[0];
-		if (!file) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-		try {
-			const formData = new FormData();
-			formData.append("file-to-upload", file);
+    try {
+      const formData = new FormData();
+      formData.append("file-to-upload", file);
 
-			let res = await axios.post(url, formData);
+      let res = await axios.post(url, formData);
       const uploadedImageUrl = res.data.imageUrl;
 
       setTemplateData((prevTemplateData) => ({
         ...prevTemplateData,
         imageUrl: uploadedImageUrl,
       }));
-		} catch (error) {
-			console.error("Upload error:", error);
-		}
-	};
+    } catch (error) {
+      console.error("Upload error:", error);
+    }
+  };
 
   const closeModal = () => {
     productModalRef.current.hide();
@@ -100,39 +100,53 @@ function App() {
     };
 
     try {
+      let response;
       if (modalType === "edit") {
-        await axios.put(url, productData);
+        response = await axios.put(url, productData);
+        console.log("更新成功", response.data);
       } else {
-        await axios.post(url, productData);
+        response = await axios.post(url, productData);
+        console.log("新增成功", response.data);
       }
 
       productModalRef.current.hide();
-      getProducts();
+      getProductData();
     } catch (err) {
       if (modalType === "edit") {
-        alert(`編輯失敗：${err.response.data.message}`);
+        console.error("更新失敗", err.response.data.message);
       } else {
-        alert(`建立失敗：${err.response.data.message}`);
+        console.error("新增失敗", err.response.data.message);
       }
     }
   };
 
   const delProductData = async (id) => {
     try {
-      `${API_BASE}/api/${API_PATH}/admin/product/${id}`;
+      const response = await axios.delete(
+        `${API_BASE}/api/${API_PATH}/admin/product/${id}`
+      );
+      console.log("刪除成功", response.data);
       productModalRef.current.hide();
-      getProducts();
+      getProductData();
     } catch (err) {
-      alert(`刪除失敗：${err.response.data.message}`);
+      console.error("刪除失敗", err.response.data.message);
     }
   };
 
   const handleInputChange = (e) => {
     const { id, value, type, checked } = e.target;
-    setTemplateData((prevData) => ({
-      ...prevData,
-      [id]: type === "checkbox" ? checked : value,
-    }));
+
+    if (id === "username" || id === "password") {
+      setFormData((prevData) => ({
+        ...prevData,
+        [id]: value,
+      }));
+    } else {
+      setTemplateData((prevData) => ({
+        ...prevData,
+        [id]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
 
   const handleImageChange = (index, value) => {
@@ -171,59 +185,62 @@ function App() {
     });
   };
 
-  const checkLogin = async () => {
+  const checkAdmin = async () => {
     try {
       await axios.post(`${API_BASE}/api/user/check`);
-      getProducts();
+      getProductData();
       setIsAuth(true);
     } catch (err) {
-      console.log(err);
+      console.log(err.response.data.message);
     }
   };
 
-  const getProducts = async (page = 1) => {
+  const getProductData = async (page = 1) => {
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         `${API_BASE}/api/${API_PATH}/admin/products?page=${page}`
       );
-      setProducts(res.data.products);
-      setPagination(res.data.pagination);
+      setProducts(response.data.products);
+      setPagination(response.data.pagination);
     } catch (err) {
       console.log(err);
     }
   };
 
-  const signIn = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${API_BASE}/admin/signin`, formData);
-      const { token, expired } = res.data;
+      const response = await axios.post(`${API_BASE}/admin/signin`, formData);
+      const { token, expired } = response.data;
       document.cookie = `hexToken=${token};expires=${new Date(expired)}`;
       axios.defaults.headers.common.Authorization = `${token}`;
 
-      getProducts();
+      getProductData()
       setIsAuth(true);
-      setFormData({});
     } catch (err) {
       alert(`登入失敗：${err.response.data.message}`);
     }
   };
 
   useEffect(() => {
-    productModalRef.current = new Modal("#productModal", {
-      keyboard: true,
-      backdrop: "static",
+    const token = document.cookie.replace(
+      /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    );
+    axios.defaults.headers.common.Authorization = token;
+    productModalRef.current = new bootstrap.Modal("#productModal", {
+      keyboard: false,
     });
 
-    const token = document.cookie
-      ?.split(";")
-      .find((token) => token.startsWith("hexToken="))
-      ?.split("=")[1];
+    document
+      .querySelector("#productModal")
+      .addEventListener("hide.bs.modal", () => {
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+      });
 
-    if (token) {
-      axios.defaults.headers.common.Authorization = `${token}`;
-      checkLogin();
-    }
+    checkAdmin();
   }, []);
 
   return (
@@ -286,7 +303,7 @@ function App() {
                 ))}
               </tbody>
             </table>
-            <Pagination pagination={pagination} changePage={getProducts} />
+            <Pagination pagination={pagination} changePage={getProductData} />
           </div>
         </div>
       ) : (
@@ -294,7 +311,7 @@ function App() {
           <div className="row justify-content-center">
             <h1 className="h3 mb-3 font-weight-normal">請先登入</h1>
             <div className="col-8">
-              <form id="form" className="form-signin" onSubmit={signIn}>
+              <form id="form" className="form-signin" onSubmit={handleSubmit}>
                 <div className="form-floating mb-3">
                   <input
                     type="email"
