@@ -6,6 +6,7 @@ function ProductModal({
   modalType,
   templateData,
   onCloseModal,
+  onFileChange,
   onInputChange,
   onImageChange,
   onAddImage,
@@ -64,6 +65,21 @@ function ProductModal({
               <div className="row">
                 <div className="col-sm-4">
                   <div className="mb-2">
+                    <div className="mb-3">
+                      <label htmlFor="fileInput" className="form-label">
+                        圖片上傳
+                      </label>
+                      <input
+                        type="file"
+                        accept=".jpg,.jpeg,.png"
+                        className="form-control"
+                        id="fileInput"
+                        onChange={onFileChange}
+                      />
+                    </div>
+                    <p className="my-2">
+                    or
+                    </p>
                     <div className="mb-3">
                       <label htmlFor="imageUrl" className="form-label">
                         輸入圖片網址
@@ -288,8 +304,8 @@ ProductModal.propTypes = {
     title: PropTypes.string,
     category: PropTypes.string,
     unit: PropTypes.string,
-    originPrice: PropTypes.string,
-    price: PropTypes.number,
+    originPrice: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     description: PropTypes.string,
     content: PropTypes.string,
     isEnabled: PropTypes.bool,
@@ -297,6 +313,7 @@ ProductModal.propTypes = {
   }).isRequired,
   onCloseModal: PropTypes.func.isRequired,
   onInputChange: PropTypes.func.isRequired,
+  onFileChange: PropTypes.func.isRequired,
   onImageChange: PropTypes.func.isRequired,
   onAddImage: PropTypes.func.isRequired,
   onRemoveImage: PropTypes.func.isRequired,
