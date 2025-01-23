@@ -20,7 +20,6 @@ function App() {
   const [pagination, setPagination] = useState({});
   const [cart, setCart] = useState([]);
   const [cartQuantity, setCartQuantity] = useState(1);
-  const [couponCode, setCouponCode] = useState("");
   const productModalRef = useRef(null);
 
   const {
@@ -119,21 +118,6 @@ function App() {
         qty,
       };
       await axios.put(url, { data });
-      getCart();
-    } catch (error) {
-      console.log(error.response.data);
-    }
-  };
-
-  // 套用優惠碼
-  const addCouponCode = async (code) => {
-    try {
-      const url = `${API_BASE}/api/${API_PATH}/coupon`;
-      const data = {
-        code,
-      };
-      await axios.post(url, { data });
-      setCouponCode("");
       getCart();
     } catch (error) {
       console.log(error.response.data);
@@ -397,9 +381,6 @@ function App() {
                 </td>
                 <td>
                   {item.product.title}
-                  {item.coupon && (
-                    <div className="text-success">已套用優惠券</div>
-                  )}
                 </td>
                 <td>
                   <div className="input-group input-group-sm">
