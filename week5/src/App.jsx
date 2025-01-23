@@ -368,7 +368,7 @@ function App() {
         <button
           className="btn btn-outline-danger"
           type="button"
-          onClick={() => deleteCartAll}
+          onClick={deleteCartAll}
         >
           清空購物車
         </button>
@@ -446,24 +446,6 @@ function App() {
           )}
         </tfoot>
       </table>
-      <div className="input-group mb-3 input-group-sm">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="請輸入優惠碼"
-          value={couponCode}
-          onChange={(e) => setCouponCode(e.target.value)}
-        />
-        <div className="input-group-append">
-          <button
-            className="btn btn-outline-secondary"
-            type="button"
-            onClick={() => addCouponCode(couponCode)}
-          >
-            套用優惠碼
-          </button>
-        </div>
-      </div>
 
       {/* 表單資料 */}
       <div className="my-5 row justify-content-center">
