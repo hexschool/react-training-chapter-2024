@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ProductModal from "../../component/ProductModal";
 import Pagination from "../../component/Pagination";
 import { useDispatch } from "react-redux";
-import { createMessage } from "../../slice/messageReducer";
+import { createAsyncMessage } from "../../slice/messageReducer";
 import * as bootstrap from "bootstrap";
 import axios from "axios";
 import "../../assets/style.css";
@@ -109,7 +109,7 @@ function Product() {
       setProducts(response.data.products);
       setPagination(response.data.pagination);
     } catch (err) {
-      dispatch(createMessage(err.response.data));
+      dispatch(createAsyncMessage(err.response.data));
     }
   };
 
@@ -133,11 +133,11 @@ function Product() {
       if (modalType === "edit") {
         response = await axios.put(url, productData);
         console.log("更新成功", response.data);
+        dispatch(createAsyncMessage(response.data));
       } else {
         response = await axios.post(url, productData);
         console.log("新增成功", response.data);
       }
-
       closeModal();
       getProductData();
     } catch (err) {
@@ -147,7 +147,7 @@ function Product() {
         console.error("新增失敗", err.response.data.message);
       }
 
-      dispatch(createMessage(err.response.data));
+      dispatch(createAsyncMessage(err.response.data));
     }
   };
 
@@ -157,10 +157,11 @@ function Product() {
         `${API_BASE}/api/${API_PATH}/admin/product/${id}`
       );
       console.log("刪除成功", response.data);
+      dispatch(createAsyncMessage(response.data));
       await productModalRef.current.hide();
       getProductData();
     } catch (err) {
-      dispatch(createMessage(err.response.data));
+      dispatch(createAsyncMessage(err.response.data));
     }
   };
 
